@@ -1,25 +1,8 @@
 <?php 
 
-// TODO move to .env
-// $host = $_ENV["DB_HOST"];
-// $database = $_ENV["DB_DATABASE"];
-// $username = $_ENV["DB_USERNAME"];
-// $password = $_ENV["DB_PASSWORD"];
+require_once 'DB/db_connect.php';
 
-$host     = 'localhost';
-$username = 'root'; 
-$password = ''; 
-$database = 'event_management';
-
-// Connect to our the database
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$database", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected to the database successfully!";
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
+$pdo = connectToDatabase();
 
 // Create the table
 $sql = "CREATE TABLE IF NOT EXISTS participations (
@@ -33,7 +16,7 @@ $sql = "CREATE TABLE IF NOT EXISTS participations (
 )";
 
 try {
-    $conn->exec($sql);
+    $pdo->exec($sql);
     echo "Table created successfully.";
 } catch(PDOException $e) {
     echo "Error creating table: " . $e->getMessage();
@@ -63,5 +46,6 @@ try {
 //     echo "Error inserting data: " . $e->getMessage();
 // }
 
+
 // Close the connection
-$conn = null; 
+$pdo = null; 
