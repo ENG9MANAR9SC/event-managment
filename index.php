@@ -4,6 +4,14 @@ require_once 'controller/eventController.php';
 
 $filtered_data = eventIndex();
 
+
+// calculate total price
+$totalPrice = 0;
+
+foreach ($filtered_data as $row) {
+  $totalPrice += $row['participation_fee'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +26,7 @@ $filtered_data = eventIndex();
         <h1>Events Managment</h1>
         <div class="mb-4">
             <p class="text-muted">Events Managment</p>
-            <button class="btn btn-primary" id="fetch-button" onclick="fetchEvents">Fetch Events</button>
+            <button type="button" class="btn btn-primary" onclick="fetchEvents()">Fetch Events</button>
         </div>
         
         <form method="GET" class="d-flex gap-2 align-items-end">
@@ -52,6 +60,9 @@ $filtered_data = eventIndex();
                     <th>Participation ID</th>
                     <th>Employee Name</th>
                     <th>Employee Email</th>
+                    <th>Event Name</th>
+                    <th>Participation Fee</th>
+                    <th>Event Date</th>
                     </tr>
             </thead>
             <tbody>
@@ -60,8 +71,15 @@ $filtered_data = eventIndex();
                         <td><?php echo $row['participation_id']; ?></td>
                         <td><?php echo $row['employee_name']; ?></td>
                         <td><?php echo $row['employee_mail']; ?></td>
-                        </tr>
+                        <td><?php echo $row['event_name']; ?></td>
+                        <td><?php echo $row['participation_fee']; ?></td>
+                        <td><?php echo $row['event_date']; ?></td>
+                    </tr>
                 <?php endforeach; ?>
+                <tr>
+                    <th colspan="4">Total Price</th>
+                    <td><?php echo number_format($totalPrice, 2); ?></td>  
+                </tr>
             </tbody>
         </table>
     </div>
@@ -69,3 +87,26 @@ $filtered_data = eventIndex();
 </body>
 </html>
 
+
+<script>
+
+// function fetch events
+async function fetchEvents() {
+    try {
+        
+        const response = await fetch('/api/fetch-events.php');
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        else {
+            //location.reload();
+        }
+
+
+    } catch (error) {
+         console.error('Error fetching data:', error);
+  }
+}
+
+</script>
